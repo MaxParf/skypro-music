@@ -1,0 +1,21 @@
+.wrapper {
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #383838;
+}
+
+.container {
+  position: relative;
+  max-width: 1920px;
+  min-height: calc(100vh - 78px);
+  margin: 0 auto;
+  background-color: #181818;
+}
+
+.main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

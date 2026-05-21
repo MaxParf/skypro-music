@@ -1,0 +1,96 @@
+.item {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.track {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 447px;
+}
+
+.titleImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 51px;
+  height: 51px;
+  margin-right: 17px;
+  padding: 16px;
+  background: #313131;
+}
+
+.titleSvg {
+  width: 18px;
+  height: 17px;
+  fill: transparent;
+  stroke: #4e4e4e;
+}
+
+.titleText {
+  min-width: 0;
+}
+
+.titleLink {
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+}
+
+.titleSpan {
+  font-size: 16px;
+  line-height: 24px;
+  color: #4e4e4e;
+}
+
+.author {
+  display: flex;
+  justify-content: flex-start;
+  width: 321px;
+}
+
+.authorLink {
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: left;
+}
+
+.album {
+  width: 245px;
+}
+
+.albumLink {
+  color: #696969;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+}
+
+.timeSvg {
+  width: 14px;
+  height: 12px;
+  margin-right: 17px;
+  fill: transparent;
+  stroke: #696969;
+}
+
+.timeText {
+  color: #696969;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: right;
+}

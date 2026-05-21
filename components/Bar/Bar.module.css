@@ -1,0 +1,256 @@
+.bar {
+  width: 100%;
+  background: rgba(28, 28, 28, 0.5);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.playerProgress {
+  width: 100%;
+  height: 5px;
+  background: #2e2e2e;
+}
+
+.playerBlock {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 73px;
+}
+
+.player {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  padding: 0 27px 0 31px;
+}
+
+.buttonPrev,
+.buttonPlay,
+.buttonNext,
+.buttonRepeat,
+.buttonShuffle {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.buttonPrev {
+  margin-right: 23px;
+}
+
+.buttonPrevSvg {
+  width: 15px;
+  height: 14px;
+}
+
+.buttonPlay {
+  margin-right: 23px;
+}
+
+.buttonPlaySvg {
+  width: 22px;
+  height: 20px;
+  fill: #d9d9d9;
+}
+
+.buttonNext {
+  margin-right: 28px;
+  fill: #a53939;
+}
+
+.buttonNextSvg {
+  width: 15px;
+  height: 14px;
+  fill: inherit;
+  stroke: #d9d9d9;
+}
+
+.buttonRepeat {
+  margin-right: 24px;
+}
+
+.buttonRepeatSvg {
+  width: 18px;
+  height: 12px;
+  fill: transparent;
+  stroke: #696969;
+}
+
+.buttonShuffleSvg {
+  width: 19px;
+  height: 12px;
+  fill: transparent;
+  stroke: #696969;
+}
+
+.buttonIcon:hover svg {
+  fill: transparent;
+  stroke: #acacac;
+}
+
+.buttonIcon:active svg {
+  fill: transparent;
+  stroke: #ffffff;
+}
+
+.buttonIcon:active .trackLikeSvg,
+.buttonIcon:active .trackDislikeSvg {
+  fill: #696969;
+  stroke: #ffffff;
+}
+
+.trackPlay {
+  display: flex;
+  flex-direction: row;
+}
+
+.trackContain {
+  display: grid;
+  grid-template-areas:
+    "image author"
+    "image album";
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  width: auto;
+}
+
+.trackImage {
+  grid-area: image;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 51px;
+  height: 51px;
+  margin-right: 12px;
+  background-color: #313131;
+}
+
+.trackSvg {
+  width: 18px;
+  height: 17px;
+  fill: transparent;
+  stroke: #4e4e4e;
+}
+
+.trackAuthor {
+  grid-area: author;
+  min-width: 49px;
+}
+
+.trackAuthorLink {
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.trackAlbum {
+  grid-area: album;
+  min-width: 49px;
+}
+
+.trackAlbumLink {
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 24px;
+}
+
+.likeDislike {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 26%;
+}
+
+.trackLike,
+.trackDislike {
+  padding: 5px;
+}
+
+.trackLikeSvg {
+  width: 14px;
+  height: 12px;
+  fill: transparent;
+  stroke: #696969;
+}
+
+.trackDislike {
+  margin-left: 28.5px;
+}
+
+.trackDislikeSvg {
+  width: 14.34px;
+  height: 13px;
+  fill: transparent;
+  stroke: #696969;
+}
+
+.volumeBlock {
+  display: flex;
+  align-items: center;
+  width: auto;
+  padding: 0 92px 0 0;
+}
+
+.volumeContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+}
+
+.volumeImage {
+  width: 13px;
+  height: 18px;
+  margin-right: 17px;
+}
+
+.volumeSvg {
+  width: 13px;
+  height: 18px;
+  fill: transparent;
+}
+
+.volumeProgress {
+  display: flex;
+  align-items: center;
+  width: 109px;
+}
+
+.volumeProgressLine {
+  width: 100%;
+  height: 2px;
+  border-radius: 5px;
+  outline: none;
+  appearance: none;
+  background: #797979;
+  cursor: pointer;
+}
+
+.volumeProgressLine::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 5px;
+  background: #797979;
+}
+
+.volumeProgressLine::-webkit-slider-thumb {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  margin-top: -7px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  appearance: none;
+  background: #1a1a1a;
+}
