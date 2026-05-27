@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { TrackItem } from "@/data/home";
+import type { Track as TrackItem } from "@/data/home";
 import styles from "./Track.module.css";
 
 type TrackProps = {
@@ -19,10 +19,10 @@ export function Track({ track }: TrackProps) {
           <div className={styles.titleText}>
             <Link className={styles.titleLink} href="#">
               {track.title}
-              {track.subtitle ? (
+              {track.titleNote ? (
                 <>
                   {" "}
-                  <span className={styles.titleSpan}>{track.subtitle}</span>
+                  <span className={styles.titleSpan}>{track.titleNote}</span>
                 </>
               ) : null}
             </Link>

@@ -3,18 +3,22 @@ export type NavItem = {
   title: string;
 };
 
+export type FilterName = "author" | "year" | "genre";
+
 export type FilterItem = {
-  id: string;
+  name: FilterName;
   label: string;
 };
 
-export type TrackItem = {
+export type Track = {
   id: number;
   title: string;
-  subtitle?: string;
+  titleNote?: string;
   author: string;
   album: string;
   duration: string;
+  genre: string;
+  releaseYear: number;
 };
 
 export type SidebarPlaylist = {
@@ -30,18 +34,20 @@ export const navItems: NavItem[] = [
 ];
 
 export const filterItems: FilterItem[] = [
-  { id: "artist", label: "исполнителю" },
-  { id: "year", label: "году выпуска" },
-  { id: "genre", label: "жанру" },
+  { name: "author", label: "исполнителю" },
+  { name: "year", label: "году выпуска" },
+  { name: "genre", label: "жанру" },
 ];
 
-export const tracks: TrackItem[] = [
+export const tracks: Track[] = [
   {
     id: 1,
     title: "Guilt",
     author: "Nero",
     album: "Welcome Reality",
     duration: "4:44",
+    genre: "Dubstep",
+    releaseYear: 2011,
   },
   {
     id: 2,
@@ -49,6 +55,8 @@ export const tracks: TrackItem[] = [
     author: "Dynoro, Outwork, Mr. Gee",
     album: "Elektro",
     duration: "2:22",
+    genre: "Dance",
+    releaseYear: 2020,
   },
   {
     id: 3,
@@ -56,22 +64,28 @@ export const tracks: TrackItem[] = [
     author: "Ali Bakgor",
     album: "I’m Fire",
     duration: "2:22",
+    genre: "House",
+    releaseYear: 2021,
   },
   {
     id: 4,
     title: "Non Stop",
-    subtitle: "(Remix)",
+    titleNote: "(Remix)",
     author: "Стоункат, Psychopath",
     album: "Non Stop",
     duration: "4:12",
+    genre: "Dance",
+    releaseYear: 2019,
   },
   {
     id: 5,
     title: "Run Run",
-    subtitle: "(feat. AR/CO)",
+    titleNote: "(feat. AR/CO)",
     author: "Jaded, Will Clarke, AR/CO",
     album: "Run Run",
     duration: "2:54",
+    genre: "House",
+    releaseYear: 2022,
   },
 ];
 

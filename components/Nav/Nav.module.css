@@ -29,6 +29,8 @@
   width: 20px;
   height: 36px;
   padding: 13px 0;
+  border: none;
+  background: transparent;
   cursor: pointer;
 }
 
@@ -40,6 +42,11 @@
 }
 
 .menu {
+  display: none;
+  visibility: hidden;
+}
+
+.menuOpen {
   display: block;
   visibility: visible;
 }

@@ -1,9 +1,19 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import classNames from "classnames";
 import { navItems } from "@/data/home";
 import styles from "./Nav.module.css";
 
 export function Nav() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen((currentState) => !currentState);
+  };
+
   return (
     <nav className={styles.nav}>
       <div className={styles.logo}>
@@ -19,13 +29,25 @@ export function Nav() {
         </Link>
       </div>
 
-      <button type="button" className={styles.burger} aria-label="Открыть меню">
+      <button
+        type="button"
+        className={styles.burger}
+        aria-label={isMenuOpen ? "Закрыть меню" : "Открыть меню"}
+        aria-expanded={isMenuOpen}
+        aria-controls="main-menu"
+        onClick={handleMenuToggle}
+      >
         <span className={styles.burgerLine} />
         <span className={styles.burgerLine} />
         <span className={styles.burgerLine} />
       </button>
 
-      <div className={styles.menu}>
+      <div
+        id="main-menu"
+        className={classNames(styles.menu, {
+          [styles.menuOpen]: isMenuOpen,
+        })}
+      >
         <ul className={styles.menuList}>
           {navItems.map((item) => (
             <li key={item.title} className={styles.menuItem}>

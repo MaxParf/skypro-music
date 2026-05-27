@@ -11,18 +11,23 @@
   line-height: 24px;
 }
 
+.item {
+  position: relative;
+}
+
+.item:not(:last-child) {
+  margin-right: 10px;
+}
+
 .button {
   padding: 6px 20px;
   border: 1px solid #ffffff;
   border-radius: 60px;
+  background: transparent;
   color: #ffffff;
   font-size: 16px;
   line-height: 24px;
   cursor: pointer;
-}
-
-.button:not(:last-child) {
-  margin-right: 10px;
 }
 
 .button:hover {
@@ -30,7 +35,61 @@
   color: #d9b6ff;
 }
 
-.button:active {
+.button:active,
+.active {
   border-color: #ad61ff;
   color: #ad61ff;
+}
+
+.popup {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 1;
+  padding: 34px;
+  border-radius: 12px;
+  background-color: #313131;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: max-content;
+  max-width: 248px;
+  height: max-content;
+  max-height: 237px;
+  overflow-y: auto;
+  color: #ffffff;
+}
+
+.list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.list::-webkit-scrollbar-track {
+  background-color: rgba(75, 73, 73, 1);
+}
+
+.list::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+}
+
+.listItem {
+  list-style: none;
+}
+
+.listButton {
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.listButton:hover {
+  color: #b672ff;
+  text-decoration: underline;
 }
