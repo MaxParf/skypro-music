@@ -1,6 +1,6 @@
 .centerblock {
-  flex-grow: 3;
-  width: auto;
+  min-width: 0;
+  width: 100%;
   padding: 20px 40px 20px 111px;
 }
 

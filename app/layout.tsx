@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { StoreProvider } from "@/components/StoreProvider/StoreProvider";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -19,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" className={montserrat.className}>
-      <body>{children}</body>
+      <body>
+        <StoreProvider>{children}</StoreProvider>
+      </body>
     </html>
   );
 }

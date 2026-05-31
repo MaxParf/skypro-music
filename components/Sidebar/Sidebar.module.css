@@ -1,5 +1,10 @@
 .sidebar {
+  width: 418px;
+  min-width: 418px;
   max-width: 418px;
+  justify-self: end;
+  align-self: start;
+  flex-shrink: 0;
   padding: 20px 90px 20px 78px;
 }
 

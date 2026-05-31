@@ -1,7 +1,15 @@
-import Link from "next/link";
+"use client";
+
+import classNames from "classnames";
 import styles from "./Bar.module.css";
+import { usePlayer } from "@/components/PlayerProvider/PlayerProvider";
+import { useAppSelector } from "@/store/hooks";
 
 export function Bar() {
+  const { isPlaying, togglePlayback } = usePlayer();
+  const currentTrack = useAppSelector((state) => state.player.currentTrack);
+  const hasTrack = currentTrack !== null;
+
   return (
     <div className={styles.bar}>
       <div className={styles.content}>
@@ -15,9 +23,21 @@ export function Bar() {
                   <use xlinkHref="/img/icon/sprite.svg#icon-prev" />
                 </svg>
               </button>
-              <button type="button" className={styles.buttonPlay}>
+              <button
+                type="button"
+                className={classNames(styles.buttonPlay, {
+                  [styles.buttonDisabled]: !hasTrack,
+                })}
+                onClick={() => void togglePlayback()}
+                disabled={!hasTrack}
+                aria-label={isPlaying ? "Пауза" : "Воспроизвести"}
+              >
                 <svg className={styles.buttonPlaySvg}>
-                  <use xlinkHref="/img/icon/sprite.svg#icon-play" />
+                  <use
+                    xlinkHref={`/img/icon/sprite.svg#${
+                      isPlaying ? "icon-pause" : "icon-play"
+                    }`}
+                  />
                 </svg>
               </button>
               <button type="button" className={styles.buttonNext}>
@@ -52,15 +72,15 @@ export function Bar() {
                 </div>
 
                 <div className={styles.trackAuthor}>
-                  <Link className={styles.trackAuthorLink} href="#">
-                    Ты та...
-                  </Link>
+                  <span className={styles.trackAuthorLink}>
+                    {currentTrack?.title ?? "Выберите трек"}
+                  </span>
                 </div>
 
                 <div className={styles.trackAlbum}>
-                  <Link className={styles.trackAlbumLink} href="#">
-                    Баста
-                  </Link>
+                  <span className={styles.trackAlbumLink}>
+                    {currentTrack?.author ?? "Нажмите на любой трек выше"}
+                  </span>
                 </div>
               </div>
 

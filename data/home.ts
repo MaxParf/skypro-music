@@ -1,3 +1,5 @@
+import type { Track } from "@/types/track";
+
 export type NavItem = {
   href: string;
   title: string;
@@ -8,17 +10,6 @@ export type FilterName = "author" | "year" | "genre";
 export type FilterItem = {
   name: FilterName;
   label: string;
-};
-
-export type Track = {
-  id: number;
-  title: string;
-  titleNote?: string;
-  author: string;
-  album: string;
-  duration: string;
-  genre: string;
-  releaseYear: number;
 };
 
 export type SidebarPlaylist = {
@@ -48,6 +39,7 @@ export const tracks: Track[] = [
     duration: "4:44",
     genre: "Dubstep",
     releaseYear: 2011,
+    audioSrc: "/api/audio/1",
   },
   {
     id: 2,
@@ -57,6 +49,7 @@ export const tracks: Track[] = [
     duration: "2:22",
     genre: "Dance",
     releaseYear: 2020,
+    audioSrc: "/api/audio/2",
   },
   {
     id: 3,
@@ -66,6 +59,7 @@ export const tracks: Track[] = [
     duration: "2:22",
     genre: "House",
     releaseYear: 2021,
+    audioSrc: "/api/audio/3",
   },
   {
     id: 4,
@@ -76,6 +70,7 @@ export const tracks: Track[] = [
     duration: "4:12",
     genre: "Dance",
     releaseYear: 2019,
+    audioSrc: "/api/audio/4",
   },
   {
     id: 5,
@@ -86,6 +81,7 @@ export const tracks: Track[] = [
     duration: "2:54",
     genre: "House",
     releaseYear: 2022,
+    audioSrc: "/api/audio/5",
   },
 ];
 
