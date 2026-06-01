@@ -7,15 +7,26 @@ import {
   useRef,
   type ReactNode,
 } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setCurrentTrack, setIsPlaying } from "@/store/playerSlice";
+import { useAppDispatch, useAppSelector, useAppStore } from "@/store/hooks";
+import {
+  playNextTrack,
+  playPreviousTrack,
+  setCurrentTime,
+  setCurrentTrack,
+  setDuration,
+  setIsPlaying,
+  setPlaylist,
+} from "@/store/playerSlice";
 import type { Track } from "@/types/track";
 
 type PlayerContextValue = {
   isPlaying: boolean;
   currentTrackId: number | null;
-  selectTrack: (track: Track) => Promise<void>;
-  togglePlayback: () => Promise<void>;
+  selectTrack: (track: Track, playlist?: Track[]) => void;
+  togglePlayback: () => void;
+  playNext: () => void;
+  playPrevious: () => void;
+  seekTo: (time: number) => void;
 };
 
 const PlayerContext = createContext<PlayerContextValue | null>(null);
@@ -37,35 +48,10 @@ const syncTrackSource = (audio: HTMLAudioElement, track: Track) => {
 export function PlayerProvider({ children }: PlayerProviderProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dispatch = useAppDispatch();
-  const { currentTrack, isPlaying } = useAppSelector((state) => state.player);
-
-  const playCurrentTrack = async () => {
-    const audio = audioRef.current;
-
-    if (!audio || !currentTrack) {
-      return;
-    }
-
-    syncTrackSource(audio, currentTrack);
-
-    try {
-      await audio.play();
-      dispatch(setIsPlaying(true));
-    } catch {
-      dispatch(setIsPlaying(false));
-    }
-  };
-
-  const pauseCurrentTrack = () => {
-    const audio = audioRef.current;
-
-    if (!audio) {
-      return;
-    }
-
-    audio.pause();
-    dispatch(setIsPlaying(false));
-  };
+  const store = useAppStore();
+  const { currentTrack, isLoop, isPlaying, volume } = useAppSelector(
+    (state) => state.player,
+  );
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -79,17 +65,20 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
       audio.removeAttribute("src");
       delete audio.dataset.trackId;
       audio.load();
+      dispatch(setCurrentTime(0));
+      dispatch(setDuration(0));
       return;
     }
 
-    syncTrackSource(audio, currentTrack);
+    const trackChanged = audio.dataset.trackId !== String(currentTrack.id);
 
-    if (isPlaying && audio.paused) {
+    if (trackChanged) {
+      syncTrackSource(audio, currentTrack);
+    }
+
+    if (isPlaying && (trackChanged || audio.paused)) {
       void audio
         .play()
-        .then(() => {
-          dispatch(setIsPlaying(true));
-        })
         .catch(() => {
           dispatch(setIsPlaying(false));
         });
@@ -100,22 +89,71 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
     }
   }, [currentTrack, isPlaying, dispatch]);
 
-  const selectTrack = async (track: Track) => {
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    if (!audio) {
+      return;
+    }
+
+    audio.volume = volume;
+  }, [volume]);
+
+  const selectTrack = (track: Track, playlist?: Track[]) => {
+    if (playlist) {
+      dispatch(setPlaylist(playlist));
+    }
+
     dispatch(setCurrentTrack(track));
     dispatch(setIsPlaying(true));
   };
 
-  const togglePlayback = async () => {
+  const togglePlayback = () => {
     if (!currentTrack) {
       return;
     }
 
     if (isPlaying) {
-      pauseCurrentTrack();
+      dispatch(setIsPlaying(false));
       return;
     }
 
-    await playCurrentTrack();
+    dispatch(setIsPlaying(true));
+  };
+
+  const playNext = () => {
+    const previousTrackId = store.getState().player.currentTrack?.id ?? null;
+
+    dispatch(playNextTrack());
+
+    const nextTrackId = store.getState().player.currentTrack?.id ?? null;
+
+    if (nextTrackId !== previousTrackId) {
+      dispatch(setIsPlaying(true));
+    }
+  };
+
+  const playPrevious = () => {
+    const previousTrackId = store.getState().player.currentTrack?.id ?? null;
+
+    dispatch(playPreviousTrack());
+
+    const nextTrackId = store.getState().player.currentTrack?.id ?? null;
+
+    if (nextTrackId !== previousTrackId) {
+      dispatch(setIsPlaying(true));
+    }
+  };
+
+  const seekTo = (time: number) => {
+    const audio = audioRef.current;
+
+    if (!audio) {
+      return;
+    }
+
+    audio.currentTime = time;
+    dispatch(setCurrentTime(time));
   };
 
   const handlePlay = () => {
@@ -127,8 +165,73 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
   };
 
   const handleEnded = () => {
+    const audio = audioRef.current;
+
+    if (!audio) {
+      dispatch(setIsPlaying(false));
+      return;
+    }
+
+    if (isLoop && currentTrack) {
+      audio.currentTime = 0;
+      dispatch(setCurrentTime(0));
+      void audio.play().catch(() => {
+        dispatch(setIsPlaying(false));
+      });
+      return;
+    }
+
+    const previousTrackId = store.getState().player.currentTrack?.id ?? null;
+
+    dispatch(playNextTrack());
+
+    const nextState = store.getState().player;
+    const nextTrackId = nextState.currentTrack?.id ?? null;
+
+    if (nextTrackId !== previousTrackId) {
+      dispatch(setIsPlaying(true));
+      return;
+    }
+
+    dispatch(setCurrentTime(0));
     dispatch(setIsPlaying(false));
   };
+
+  const handleTimeUpdate = () => {
+    const audio = audioRef.current;
+
+    if (!audio) {
+      return;
+    }
+
+    dispatch(setCurrentTime(audio.currentTime));
+  };
+
+  const handleLoadedMetadata = () => {
+    const audio = audioRef.current;
+
+    if (!audio) {
+      return;
+    }
+
+    dispatch(setDuration(audio.duration));
+  };
+
+  const handleError = () => {
+    dispatch(setIsPlaying(false));
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    return () => {
+      if (!audio) {
+        return;
+      }
+
+      audio.pause();
+    };
+  }, []);
 
   return (
     <PlayerContext.Provider
@@ -137,6 +240,9 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
         currentTrackId: currentTrack?.id ?? null,
         selectTrack,
         togglePlayback,
+        playNext,
+        playPrevious,
+        seekTo,
       }}
     >
       {children}
@@ -145,8 +251,11 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
         hidden
         preload="metadata"
         onEnded={handleEnded}
+        onError={handleError}
+        onLoadedMetadata={handleLoadedMetadata}
         onPause={handlePause}
         onPlay={handlePlay}
+        onTimeUpdate={handleTimeUpdate}
       />
     </PlayerContext.Provider>
   );

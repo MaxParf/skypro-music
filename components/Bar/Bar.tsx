@@ -2,23 +2,66 @@
 
 import classNames from "classnames";
 import styles from "./Bar.module.css";
+import { ProgressBar } from "@/components/ProgressBar/ProgressBar";
 import { usePlayer } from "@/components/PlayerProvider/PlayerProvider";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setVolume, toggleLoop, toggleShuffle } from "@/store/playerSlice";
+import { formatTime } from "@/utils/formatTime";
 
 export function Bar() {
-  const { isPlaying, togglePlayback } = usePlayer();
-  const currentTrack = useAppSelector((state) => state.player.currentTrack);
+  const dispatch = useAppDispatch();
+  const { isPlaying, playNext, playPrevious, seekTo, togglePlayback } =
+    usePlayer();
+  const {
+    currentTime,
+    currentTrack,
+    currentTrackIndex,
+    duration,
+    isLoop,
+    isShuffle,
+    playlist,
+    volume,
+  } = useAppSelector((state) => state.player);
   const hasTrack = currentTrack !== null;
+  const isPreviousDisabled = !hasTrack || currentTrackIndex === null || currentTrackIndex <= 0;
+  const isNextDisabled =
+    !hasTrack ||
+    currentTrackIndex === null ||
+    (!isShuffle && currentTrackIndex >= playlist.length - 1);
 
   return (
     <div className={styles.bar}>
       <div className={styles.content}>
-        <div className={styles.playerProgress} />
+        <div className={styles.playerProgressRow}>
+          <div className={styles.playerProgress}>
+            <ProgressBar
+              max={duration}
+              value={currentTime}
+              step={0.1}
+              disabled={!hasTrack || duration <= 0}
+              onChange={(event) => {
+                seekTo(Number(event.target.value));
+              }}
+            />
+          </div>
+          <div className={styles.timeInfo}>
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
+        </div>
 
         <div className={styles.playerBlock}>
           <div className={styles.player}>
             <div className={styles.controls}>
-              <button type="button" className={styles.buttonPrev}>
+              <button
+                type="button"
+                className={classNames(styles.buttonPrev, {
+                  [styles.buttonDisabled]: isPreviousDisabled,
+                })}
+                onClick={playPrevious}
+                disabled={isPreviousDisabled}
+                aria-label="Предыдущий трек"
+              >
                 <svg className={styles.buttonPrevSvg}>
                   <use xlinkHref="/img/icon/sprite.svg#icon-prev" />
                 </svg>
@@ -40,14 +83,27 @@ export function Bar() {
                   />
                 </svg>
               </button>
-              <button type="button" className={styles.buttonNext}>
+              <button
+                type="button"
+                className={classNames(styles.buttonNext, {
+                  [styles.buttonDisabled]: isNextDisabled,
+                })}
+                onClick={playNext}
+                disabled={isNextDisabled}
+                aria-label="Следующий трек"
+              >
                 <svg className={styles.buttonNextSvg}>
                   <use xlinkHref="/img/icon/sprite.svg#icon-next" />
                 </svg>
               </button>
               <button
                 type="button"
-                className={`${styles.buttonIcon} ${styles.buttonRepeat}`}
+                className={classNames(styles.buttonIcon, styles.buttonRepeat, {
+                  [styles.buttonActive]: isLoop,
+                })}
+                onClick={() => dispatch(toggleLoop())}
+                aria-pressed={isLoop}
+                aria-label="Повтор текущего трека"
               >
                 <svg className={styles.buttonRepeatSvg}>
                   <use xlinkHref="/img/icon/sprite.svg#icon-repeat" />
@@ -55,7 +111,12 @@ export function Bar() {
               </button>
               <button
                 type="button"
-                className={`${styles.buttonIcon} ${styles.buttonShuffle}`}
+                className={classNames(styles.buttonIcon, styles.buttonShuffle, {
+                  [styles.buttonActive]: isShuffle,
+                })}
+                onClick={() => dispatch(toggleShuffle())}
+                aria-pressed={isShuffle}
+                aria-label="Перемешать плейлист"
               >
                 <svg className={styles.buttonShuffleSvg}>
                   <use xlinkHref="/img/icon/sprite.svg#icon-shuffle" />
@@ -116,7 +177,14 @@ export function Bar() {
                 <input
                   className={styles.volumeProgressLine}
                   type="range"
-                  name="range"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={Math.round(volume * 100)}
+                  onChange={(event) => {
+                    dispatch(setVolume(Number(event.target.value) / 100));
+                  }}
+                  aria-label="Громкость"
                 />
               </div>
             </div>

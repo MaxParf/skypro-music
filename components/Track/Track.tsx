@@ -7,9 +7,10 @@ import styles from "./Track.module.css";
 
 type TrackProps = {
   track: TrackItem;
+  playlist?: TrackItem[];
 };
 
-export function Track({ track }: TrackProps) {
+export function Track({ track, playlist }: TrackProps) {
   const { currentTrackId, isPlaying, selectTrack } = usePlayer();
   const isCurrentTrack = currentTrackId === track.id;
 
@@ -20,7 +21,7 @@ export function Track({ track }: TrackProps) {
         className={classNames(styles.track, styles.trackButton, {
           [styles.trackActive]: isCurrentTrack,
         })}
-        onClick={() => void selectTrack(track)}
+        onClick={() => selectTrack(track, playlist)}
         aria-pressed={isCurrentTrack}
       >
         <div className={styles.title}>
