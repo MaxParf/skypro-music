@@ -1,0 +1,33 @@
+.search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 51px;
+  border-bottom: 1px solid #4e4e4e;
+}
+
+.icon {
+  width: 17px;
+  height: 17px;
+  margin-right: 5px;
+  fill: transparent;
+  stroke: #ffffff;
+}
+
+.input {
+  flex-grow: 100;
+  padding: 13px 10px 14px;
+  border: none;
+  background-color: transparent;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 24px;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 24px;
+}
