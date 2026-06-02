@@ -6,6 +6,17 @@ export type Track = {
   album: string;
   duration: string;
   genre: string;
-  releaseYear: number;
+  releaseYear: number | null;
   audioSrc: string;
+};
+
+export type ApiTrack = {
+  _id: number;
+  name: string;
+  author: string;
+  release_date: string;
+  genre: string[];
+  duration_in_seconds: number;
+  album: string;
+  track_file: string;
 };

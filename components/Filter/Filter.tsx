@@ -2,18 +2,25 @@
 
 import { useState } from "react";
 import classNames from "classnames";
-import { filterItems, tracks, type FilterName } from "@/data/home";
+import { filterItems, type FilterName } from "@/data/home";
+import type { Track } from "@/types/track";
 import styles from "./Filter.module.css";
 
 const getUniqueValues = <T,>(values: T[]): T[] => Array.from(new Set(values));
 
-export function Filter() {
+type FilterProps = {
+  tracks: Track[];
+};
+
+export function Filter({ tracks }: FilterProps) {
   const [activeFilter, setActiveFilter] = useState<FilterName | null>(null);
 
   const authors = getUniqueValues(tracks.map((track) => track.author));
-  const years = getUniqueValues(tracks.map((track) => track.releaseYear)).sort(
-    (firstYear, secondYear) => secondYear - firstYear,
-  );
+  const years = getUniqueValues(
+    tracks
+      .map((track) => track.releaseYear)
+      .filter((year): year is number => year !== null),
+  ).sort((firstYear, secondYear) => secondYear - firstYear);
   const genres = getUniqueValues(tracks.map((track) => track.genre));
 
   const filterValues: Record<FilterName, Array<string | number>> = {
@@ -46,13 +53,19 @@ export function Filter() {
           {activeFilter === item.name ? (
             <div className={styles.popup}>
               <ul className={styles.list}>
-                {filterValues[item.name].map((value) => (
-                  <li key={String(value)} className={styles.listItem}>
-                    <button type="button" className={styles.listButton}>
-                      {value}
-                    </button>
+                {filterValues[item.name].length > 0 ? (
+                  filterValues[item.name].map((value) => (
+                    <li key={String(value)} className={styles.listItem}>
+                      <button type="button" className={styles.listButton}>
+                        {value}
+                      </button>
+                    </li>
+                  ))
+                ) : (
+                  <li className={styles.listItem}>
+                    <span className={styles.empty}>Нет данных</span>
                   </li>
-                ))}
+                )}
               </ul>
             </div>
           ) : null}

@@ -1,5 +1,4 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { tracks } from "@/data/home";
 import type { Track } from "@/types/track";
 
 export type PlayerState = {
@@ -17,7 +16,7 @@ export type PlayerState = {
 const initialState: PlayerState = {
   currentTrack: null,
   currentTrackIndex: null,
-  playlist: tracks,
+  playlist: [],
   isPlaying: false,
   isShuffle: false,
   isLoop: false,

@@ -93,3 +93,9 @@
   color: #b672ff;
   text-decoration: underline;
 }
+
+.empty {
+  color: #d0d0d0;
+  font-size: 18px;
+  line-height: 24px;
+}

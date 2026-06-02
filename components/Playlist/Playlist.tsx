@@ -1,8 +1,22 @@
-import { tracks } from "@/data/home";
+"use client";
+
 import { Track } from "@/components/Track/Track";
+import type { Track as TrackItem } from "@/types/track";
 import styles from "./Playlist.module.css";
 
-export function Playlist() {
+type PlaylistProps = {
+  tracks: TrackItem[];
+  isLoading?: boolean;
+  error?: string | null;
+  onRetry?: () => void;
+};
+
+export function Playlist({
+  tracks,
+  isLoading = false,
+  error = null,
+  onRetry,
+}: PlaylistProps) {
   return (
     <div className={styles.content}>
       <div className={styles.title}>
@@ -19,9 +33,34 @@ export function Playlist() {
       </div>
 
       <div className={styles.list}>
-        {tracks.map((track) => (
-          <Track key={track.id} track={track} playlist={tracks} />
-        ))}
+        {isLoading ? (
+          <div className={styles.state}>Загрузка треков...</div>
+        ) : null}
+
+        {!isLoading && error ? (
+          <div className={styles.state}>
+            <p>{error}</p>
+            {onRetry ? (
+              <button
+                type="button"
+                className={styles.retryButton}
+                onClick={onRetry}
+              >
+                Попробовать снова
+              </button>
+            ) : null}
+          </div>
+        ) : null}
+
+        {!isLoading && !error && tracks.length === 0 ? (
+          <div className={styles.state}>Список треков пока пуст.</div>
+        ) : null}
+
+        {!isLoading && !error
+          ? tracks.map((track) => (
+              <Track key={track.id} track={track} playlist={tracks} />
+            ))
+          : null}
       </div>
     </div>
   );

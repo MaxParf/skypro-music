@@ -1,25 +1,57 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { sidebarPlaylists } from "@/data/home";
+import { logout } from "@/store/authSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { clearStoredAuth } from "@/utils/authStorage";
 import styles from "./Sidebar.module.css";
 
 export function Sidebar() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const user = useAppSelector((state) => state.auth.user);
+
+  const handleLogout = () => {
+    clearStoredAuth();
+    dispatch(logout());
+    router.push("/signin");
+  };
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.personal}>
-        <p className={styles.personalName}>Sergey.Ivanov</p>
-        <div className={styles.icon}>
-          <svg className={styles.iconSvg}>
-            <use xlinkHref="/img/icon/sprite.svg#logout" />
-          </svg>
-        </div>
+        {user ? (
+          <>
+            <p className={styles.personalName}>{user.username}</p>
+            <button
+              type="button"
+              className={styles.icon}
+              onClick={handleLogout}
+              aria-label="Выйти"
+            >
+              <svg className={styles.iconSvg}>
+                <use xlinkHref="/img/icon/sprite.svg#logout" />
+              </svg>
+            </button>
+          </>
+        ) : (
+          <Link href="/signin" className={styles.signInLink}>
+            Войти
+          </Link>
+        )}
       </div>
 
       <div className={styles.block}>
         <div className={styles.list}>
           {sidebarPlaylists.map((playlist) => (
             <div key={playlist.id} className={styles.item}>
-              <Link className={styles.link} href="#">
+              <Link
+                className={styles.link}
+                href={`/category/${playlist.collectionId}`}
+              >
                 <Image
                   className={styles.image}
                   src={playlist.src}
