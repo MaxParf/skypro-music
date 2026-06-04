@@ -32,9 +32,13 @@ export function Sidebar() {
               onClick={handleLogout}
               aria-label="Выйти"
             >
-              <svg className={styles.iconSvg}>
-                <use xlinkHref="/img/icon/sprite.svg#logout" />
-              </svg>
+              <Image
+                className={styles.iconSvg}
+                src="/img/icon/logout.svg"
+                alt=""
+                width={40}
+                height={40}
+              />
             </button>
           </>
         ) : (

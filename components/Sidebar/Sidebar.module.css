@@ -27,18 +27,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 43px;
-  height: 43px;
-  border-radius: 50%;
-  background-color: #313131;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
   cursor: pointer;
 }
 
 .iconSvg {
-  width: 16px;
-  height: 16px;
-  fill: transparent;
-  stroke: #ffffff;
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
 }
 
 .block {
