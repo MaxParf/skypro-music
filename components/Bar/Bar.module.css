@@ -66,6 +66,8 @@
   display: flex;
   align-items: center;
   padding: 5px;
+  border: 0;
+  background: transparent;
   cursor: pointer;
 }
 
@@ -122,6 +124,10 @@
 
 .buttonActive svg {
   stroke: #b672ff;
+}
+
+.buttonActive .trackLikeSvg {
+  fill: #b672ff;
 }
 
 .buttonShuffleSvg {
@@ -223,25 +229,15 @@
   margin-left: 31px;
 }
 
-.trackLike,
-.trackDislike {
+.trackLike {
   padding: 5px;
+  border: 0;
+  background: transparent;
 }
 
 .trackLikeSvg {
   width: 14px;
   height: 12px;
-  fill: transparent;
-  stroke: #696969;
-}
-
-.trackDislike {
-  margin-left: 28.5px;
-}
-
-.trackDislikeSvg {
-  width: 14.34px;
-  height: 13px;
   fill: transparent;
   stroke: #696969;
 }
@@ -318,4 +314,11 @@
   border: 2px solid #ffffff;
   border-radius: 50%;
   background: #1a1a1a;
+}
+
+.favoriteError {
+  padding: 0 31px 12px;
+  color: #ff6a6a;
+  font-size: 13px;
+  line-height: 18px;
 }

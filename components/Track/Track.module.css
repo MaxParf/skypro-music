@@ -9,10 +9,14 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 
 .trackButton {
-  width: 100%;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
   padding: 0;
   border: 0;
   background: transparent;
@@ -106,12 +110,13 @@
 .time {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  width: 60px;
 }
 
 .timeSvg {
   width: 14px;
   height: 12px;
-  margin-right: 17px;
   fill: transparent;
   stroke: #696969;
 }
@@ -121,6 +126,39 @@
   font-size: 16px;
   line-height: 24px;
   text-align: right;
+}
+
+.favoriteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 17px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.favoriteButton:hover .timeSvg {
+  stroke: #acacac;
+}
+
+.favoriteButtonActive .timeSvg {
+  fill: #b672ff;
+  stroke: #b672ff;
+}
+
+.favoriteButtonLoading {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.error {
+  margin-top: 8px;
+  color: #ff6a6a;
+  font-size: 13px;
+  line-height: 18px;
+  padding-left: 68px;
 }
 
 @keyframes pulse {

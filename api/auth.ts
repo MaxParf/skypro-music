@@ -32,3 +32,5 @@ export const refreshAccessToken = (payload: RefreshTokenRequest) =>
     method: "POST",
     body: payload,
   });
+
+export const refreshToken = (refresh: string) => refreshAccessToken({ refresh });

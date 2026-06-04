@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { getTokenPair, loginUser, registerUser } from "@/api/auth";
 import type {
   AuthTokens,
@@ -82,6 +82,13 @@ const authSlice = createSlice({
     clearAuthError(state) {
       state.error = null;
     },
+    setAccessToken(state, action: PayloadAction<string>) {
+      if (!state.tokens) {
+        return;
+      }
+
+      state.tokens.access = action.payload;
+    },
     logout(state) {
       state.user = null;
       state.tokens = null;
@@ -125,5 +132,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearAuthError, logout } = authSlice.actions;
+export const { clearAuthError, logout, setAccessToken } = authSlice.actions;
 export const authReducer = authSlice.reducer;

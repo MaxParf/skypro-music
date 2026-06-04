@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import classNames from "classnames";
 import { logout } from "@/store/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -12,25 +12,31 @@ import styles from "./Nav.module.css";
 
 export function Nav() {
   const dispatch = useAppDispatch();
+  const pathname = usePathname();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
 
-  const navItems = [
-    { href: "/", title: "Главное" },
-    { href: "/category/2", title: "Мой плейлист" },
-  ];
+  const navItems = useMemo(
+    () => [
+      { href: "/", title: "Главное" },
+      { href: user ? "/favorites" : "/signin", title: "Мой плейлист" },
+    ],
+    [user],
+  );
 
   const handleMenuToggle = () => {
     setIsMenuOpen((currentState) => !currentState);
   };
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
+    const targetPath = pathname === "/favorites" ? "/" : "/signin";
+
+    router.replace(targetPath);
     clearStoredAuth();
     dispatch(logout());
     setIsMenuOpen(false);
-    router.push("/signin");
-  };
+  }, [dispatch, pathname, router]);
 
   return (
     <nav className={styles.nav}>

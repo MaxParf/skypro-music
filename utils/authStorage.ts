@@ -45,6 +45,22 @@ export const writeStoredAuth = (value: PersistedAuthState) => {
   window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(value));
 };
 
+export const updateStoredAccessToken = (access: string) => {
+  const storedAuth = readStoredAuth();
+
+  if (!storedAuth) {
+    return;
+  }
+
+  writeStoredAuth({
+    ...storedAuth,
+    tokens: {
+      ...storedAuth.tokens,
+      access,
+    },
+  });
+};
+
 export const clearStoredAuth = () => {
   if (!isBrowser()) {
     return;

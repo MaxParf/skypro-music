@@ -1,9 +1,14 @@
 "use client";
 
+import { useCallback, useMemo, useState } from "react";
 import classNames from "classnames";
 import styles from "./Bar.module.css";
 import { ProgressBar } from "@/components/ProgressBar/ProgressBar";
 import { usePlayer } from "@/components/PlayerProvider/PlayerProvider";
+import {
+  addTrackToFavorites,
+  removeTrackFromFavorites,
+} from "@/store/tracksSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setVolume, toggleLoop, toggleShuffle } from "@/store/playerSlice";
 import { formatTime } from "@/utils/formatTime";
@@ -12,6 +17,12 @@ export function Bar() {
   const dispatch = useAppDispatch();
   const { isPlaying, playNext, playPrevious, seekTo, togglePlayback } =
     usePlayer();
+  const [favoriteError, setFavoriteError] = useState<string | null>(null);
+  const { user } = useAppSelector((state) => state.auth);
+  const { favoriteTracks, pendingLikeIds, tracks } = useAppSelector(
+    (state) => state.tracks,
+  );
+  const collectionTracks = useAppSelector((state) => state.collections.tracks);
   const {
     currentTime,
     currentTrack,
@@ -22,12 +33,74 @@ export function Bar() {
     playlist,
     volume,
   } = useAppSelector((state) => state.player);
-  const hasTrack = currentTrack !== null;
-  const isPreviousDisabled = !hasTrack || currentTrackIndex === null || currentTrackIndex <= 0;
+
+  const trackLookup = useMemo(() => {
+    const mappedTracks = new Map<number, (typeof tracks)[number]>();
+
+    [...tracks, ...collectionTracks, ...favoriteTracks].forEach((track) => {
+      mappedTracks.set(track.id, track);
+    });
+
+    return mappedTracks;
+  }, [collectionTracks, favoriteTracks, tracks]);
+  const favoriteTrackIds = useMemo(
+    () =>
+      new Set(
+        [...tracks, ...collectionTracks, ...favoriteTracks]
+          .filter((track) => track.isFavorite)
+          .map((track) => track.id),
+      ),
+    [collectionTracks, favoriteTracks, tracks],
+  );
+
+  const resolvedCurrentTrack = currentTrack
+    ? trackLookup.get(currentTrack.id) ?? currentTrack
+    : null;
+  const currentTrackId = resolvedCurrentTrack?.id ?? null;
+  const currentTrackIsFavorite =
+    currentTrackId !== null
+      ? favoriteTrackIds.has(currentTrackId)
+      : resolvedCurrentTrack?.isFavorite ?? false;
+  const isFavoritePending =
+    currentTrackId !== null && pendingLikeIds.includes(currentTrackId);
+  const hasTrack = resolvedCurrentTrack !== null;
+  const isPreviousDisabled =
+    !hasTrack || currentTrackIndex === null || currentTrackIndex <= 0;
   const isNextDisabled =
     !hasTrack ||
     currentTrackIndex === null ||
     (!isShuffle && currentTrackIndex >= playlist.length - 1);
+
+  const handleToggleFavorite = useCallback(async () => {
+    setFavoriteError(null);
+
+    if (!resolvedCurrentTrack) {
+      return;
+    }
+
+    if (!user) {
+      setFavoriteError("Войдите, чтобы добавить трек в избранное");
+      return;
+    }
+
+    const action = resolvedCurrentTrack.isFavorite
+      ? removeTrackFromFavorites(resolvedCurrentTrack.id)
+      : addTrackToFavorites(resolvedCurrentTrack.id);
+
+    const result = await dispatch(action);
+
+    if (addTrackToFavorites.rejected.match(result)) {
+      setFavoriteError(
+        result.payload ?? "Не удалось добавить трек в избранное.",
+      );
+    }
+
+    if (removeTrackFromFavorites.rejected.match(result)) {
+      setFavoriteError(
+        result.payload ?? "Не удалось удалить трек из избранного.",
+      );
+    }
+  }, [dispatch, resolvedCurrentTrack, user]);
 
   return (
     <div className={styles.bar}>
@@ -134,13 +207,13 @@ export function Bar() {
 
                 <div className={styles.trackAuthor}>
                   <span className={styles.trackAuthorLink}>
-                    {currentTrack?.title ?? "Выберите трек"}
+                    {resolvedCurrentTrack?.title ?? "Выберите трек"}
                   </span>
                 </div>
 
                 <div className={styles.trackAlbum}>
                   <span className={styles.trackAlbumLink}>
-                    {currentTrack?.author ?? "Нажмите на любой трек выше"}
+                    {resolvedCurrentTrack?.author ?? "Нажмите на любой трек выше"}
                   </span>
                 </div>
               </div>
@@ -148,18 +221,21 @@ export function Bar() {
               <div className={styles.likeDislike}>
                 <button
                   type="button"
-                  className={`${styles.buttonIcon} ${styles.trackLike}`}
+                  className={classNames(styles.buttonIcon, styles.trackLike, {
+                    [styles.buttonActive]: currentTrackIsFavorite,
+                    [styles.buttonDisabled]: !hasTrack || isFavoritePending,
+                  })}
+                  onClick={() => void handleToggleFavorite()}
+                  disabled={!hasTrack || isFavoritePending}
+                  aria-label={
+                    currentTrackIsFavorite
+                      ? "Удалить трек из избранного"
+                      : "Добавить трек в избранное"
+                  }
+                  aria-pressed={currentTrackIsFavorite}
                 >
                   <svg className={styles.trackLikeSvg}>
                     <use xlinkHref="/img/icon/sprite.svg#icon-like" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.buttonIcon} ${styles.trackDislike}`}
-                >
-                  <svg className={styles.trackDislikeSvg}>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-dislike" />
                   </svg>
                 </button>
               </div>
@@ -190,6 +266,8 @@ export function Bar() {
             </div>
           </div>
         </div>
+
+        {favoriteError ? <p className={styles.favoriteError}>{favoriteError}</p> : null}
       </div>
     </div>
   );

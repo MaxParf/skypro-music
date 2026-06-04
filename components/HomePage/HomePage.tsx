@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Centerblock } from "@/components/Centerblock/Centerblock";
 import { MusicPageLayout } from "@/components/MusicPageLayout/MusicPageLayout";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -11,6 +11,10 @@ export function HomePage() {
   const dispatch = useAppDispatch();
   const { currentTrack, playlist } = useAppSelector((state) => state.player);
   const { error, isLoading, tracks } = useAppSelector((state) => state.tracks);
+
+  const handleRetry = useCallback(() => {
+    void dispatch(fetchTracks());
+  }, [dispatch]);
 
   useEffect(() => {
     if (!isLoading && tracks.length === 0 && !error) {
@@ -33,9 +37,7 @@ export function HomePage() {
         tracks={tracks}
         isLoading={isLoading}
         error={error}
-        onRetry={() => {
-          void dispatch(fetchTracks());
-        }}
+        onRetry={handleRetry}
       />
     </MusicPageLayout>
   );

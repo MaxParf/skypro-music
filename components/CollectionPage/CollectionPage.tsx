@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Centerblock } from "@/components/Centerblock/Centerblock";
 import { MusicPageLayout } from "@/components/MusicPageLayout/MusicPageLayout";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -15,6 +15,10 @@ export function CollectionPage({ collectionId }: CollectionPageProps) {
   const { activeCollection, error, isLoading, tracks } = useAppSelector(
     (state) => state.collections,
   );
+
+  const handleRetry = useCallback(() => {
+    void dispatch(fetchCollectionTracks(collectionId));
+  }, [collectionId, dispatch]);
 
   useEffect(() => {
     if (Number.isNaN(collectionId)) {
@@ -31,9 +35,7 @@ export function CollectionPage({ collectionId }: CollectionPageProps) {
         tracks={tracks}
         isLoading={isLoading}
         error={error}
-        onRetry={() => {
-          void dispatch(fetchCollectionTracks(collectionId));
-        }}
+        onRetry={handleRetry}
       />
     </MusicPageLayout>
   );

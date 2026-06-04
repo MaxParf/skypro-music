@@ -1,8 +1,9 @@
 "use client";
 
+import { useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { sidebarPlaylists } from "@/data/home";
 import { logout } from "@/store/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -11,14 +12,17 @@ import styles from "./Sidebar.module.css";
 
 export function Sidebar() {
   const dispatch = useAppDispatch();
+  const pathname = usePathname();
   const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
+    const targetPath = pathname === "/favorites" ? "/" : "/signin";
+
+    router.replace(targetPath);
     clearStoredAuth();
     dispatch(logout());
-    router.push("/signin");
-  };
+  }, [dispatch, pathname, router]);
 
   return (
     <aside className={styles.sidebar}>

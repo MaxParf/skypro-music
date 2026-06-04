@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import classNames from "classnames";
 import { filterItems, type FilterName } from "@/data/home";
 import type { Track } from "@/types/track";
@@ -15,19 +15,18 @@ type FilterProps = {
 export function Filter({ tracks }: FilterProps) {
   const [activeFilter, setActiveFilter] = useState<FilterName | null>(null);
 
-  const authors = getUniqueValues(tracks.map((track) => track.author));
-  const years = getUniqueValues(
-    tracks
-      .map((track) => track.releaseYear)
-      .filter((year): year is number => year !== null),
-  ).sort((firstYear, secondYear) => secondYear - firstYear);
-  const genres = getUniqueValues(tracks.map((track) => track.genre));
-
-  const filterValues: Record<FilterName, Array<string | number>> = {
-    author: authors,
-    year: years,
-    genre: genres,
-  };
+  const filterValues = useMemo<Record<FilterName, Array<string | number>>>(
+    () => ({
+      author: getUniqueValues(tracks.map((track) => track.author)),
+      year: getUniqueValues(
+        tracks
+          .map((track) => track.releaseYear)
+          .filter((year): year is number => year !== null),
+      ).sort((firstYear, secondYear) => secondYear - firstYear),
+      genre: getUniqueValues(tracks.map((track) => track.genre)),
+    }),
+    [tracks],
+  );
 
   const handleFilterToggle = (filterName: FilterName) => {
     setActiveFilter((currentFilter) =>

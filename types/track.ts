@@ -1,13 +1,17 @@
 export type Track = {
   id: number;
+  apiId: number;
   title: string;
   titleNote?: string;
   author: string;
   album: string;
   duration: string;
+  durationInSeconds: number;
   genre: string;
   releaseYear: number | null;
   audioSrc: string;
+  favoriteUserIds: number[];
+  isFavorite: boolean;
 };
 
 export type ApiTrack = {
@@ -19,4 +23,5 @@ export type ApiTrack = {
   duration_in_seconds: number;
   album: string;
   track_file: string;
+  staredUser: number[];
 };

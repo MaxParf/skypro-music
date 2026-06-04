@@ -30,12 +30,12 @@ export async function fetchCollections() {
 }
 
 export async function fetchCollectionById(collectionId: number) {
-  const response = await requestJson<ApiResponse<ApiCollection>>(
+  const response = await requestJson<ApiResponse<ApiCollection | null>>(
     `/catalog/selection/${collectionId}/`,
     {
       method: "GET",
     },
   );
 
-  return mapCollection(response.data);
+  return response.data ? mapCollection(response.data) : null;
 }
