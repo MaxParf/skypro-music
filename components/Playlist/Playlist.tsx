@@ -9,6 +9,7 @@ type PlaylistProps = {
   isLoading?: boolean;
   error?: string | null;
   onRetry?: () => void;
+  emptyMessage?: string;
 };
 
 export function Playlist({
@@ -16,6 +17,7 @@ export function Playlist({
   isLoading = false,
   error = null,
   onRetry,
+  emptyMessage = "Список треков пока пуст.",
 }: PlaylistProps) {
   return (
     <div className={styles.content}>
@@ -53,7 +55,7 @@ export function Playlist({
         ) : null}
 
         {!isLoading && !error && tracks.length === 0 ? (
-          <div className={styles.state}>Список треков пока пуст.</div>
+          <div className={styles.state}>{emptyMessage}</div>
         ) : null}
 
         {!isLoading && !error

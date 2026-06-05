@@ -1,6 +1,11 @@
 import styles from "./Search.module.css";
 
-export function Search() {
+type SearchProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+export function Search({ value, onChange }: SearchProps) {
   return (
     <div className={styles.search}>
       <svg className={styles.icon}>
@@ -11,6 +16,8 @@ export function Search() {
         type="search"
         placeholder="Поиск"
         name="search"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
       />
     </div>
   );

@@ -1,38 +1,51 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import classNames from "classnames";
 import { filterItems, type FilterName } from "@/data/home";
-import type { Track } from "@/types/track";
+import type { TrackReleaseDateSort } from "@/utils/trackQuery";
 import styles from "./Filter.module.css";
 
-const getUniqueValues = <T,>(values: T[]): T[] => Array.from(new Set(values));
-
 type FilterProps = {
-  tracks: Track[];
+  authors: string[];
+  genres: string[];
+  selectedAuthor: string | null;
+  selectedGenre: string | null;
+  sort: TrackReleaseDateSort;
+  onAuthorChange: (author: string | null) => void;
+  onGenreChange: (genre: string | null) => void;
+  onSortChange: (sort: TrackReleaseDateSort) => void;
 };
 
-export function Filter({ tracks }: FilterProps) {
-  const [activeFilter, setActiveFilter] = useState<FilterName | null>(null);
+const sortOptions: Array<{ label: string; value: TrackReleaseDateSort }> = [
+  { label: "По умолчанию", value: "default" },
+  { label: "Сначала новые", value: "newest" },
+  { label: "Сначала старые", value: "oldest" },
+];
 
-  const filterValues = useMemo<Record<FilterName, Array<string | number>>>(
-    () => ({
-      author: getUniqueValues(tracks.map((track) => track.author)),
-      year: getUniqueValues(
-        tracks
-          .map((track) => track.releaseYear)
-          .filter((year): year is number => year !== null),
-      ).sort((firstYear, secondYear) => secondYear - firstYear),
-      genre: getUniqueValues(tracks.map((track) => track.genre)),
-    }),
-    [tracks],
-  );
+export function Filter({
+  authors,
+  genres,
+  selectedAuthor,
+  selectedGenre,
+  sort,
+  onAuthorChange,
+  onGenreChange,
+  onSortChange,
+}: FilterProps) {
+  const [activeFilter, setActiveFilter] = useState<FilterName | null>(null);
 
   const handleFilterToggle = (filterName: FilterName) => {
     setActiveFilter((currentFilter) =>
       currentFilter === filterName ? null : filterName,
     );
   };
+
+  const filterValues = {
+    author: authors,
+    year: sortOptions,
+    genre: genres,
+  } as const;
 
   return (
     <div className={styles.filter}>
@@ -53,13 +66,53 @@ export function Filter({ tracks }: FilterProps) {
             <div className={styles.popup}>
               <ul className={styles.list}>
                 {filterValues[item.name].length > 0 ? (
-                  filterValues[item.name].map((value) => (
-                    <li key={String(value)} className={styles.listItem}>
-                      <button type="button" className={styles.listButton}>
-                        {value}
-                      </button>
-                    </li>
-                  ))
+                  item.name === "author"
+                    ? filterValues.author.map((author) => (
+                        <li key={author} className={styles.listItem}>
+                          <button
+                            type="button"
+                            className={classNames(styles.listButton, {
+                              [styles.active]: selectedAuthor === author,
+                            })}
+                            onClick={() =>
+                              onAuthorChange(
+                                selectedAuthor === author ? null : author,
+                              )
+                            }
+                          >
+                            {author}
+                          </button>
+                        </li>
+                      ))
+                    : item.name === "genre"
+                      ? filterValues.genre.map((genre) => (
+                          <li key={genre} className={styles.listItem}>
+                            <button
+                              type="button"
+                              className={classNames(styles.listButton, {
+                                [styles.active]: selectedGenre === genre,
+                              })}
+                              onClick={() =>
+                                onGenreChange(selectedGenre === genre ? null : genre)
+                              }
+                            >
+                              {genre}
+                            </button>
+                          </li>
+                        ))
+                      : filterValues.year.map((option) => (
+                          <li key={option.value} className={styles.listItem}>
+                            <button
+                              type="button"
+                              className={classNames(styles.listButton, {
+                                [styles.active]: sort === option.value,
+                              })}
+                              onClick={() => onSortChange(option.value)}
+                            >
+                              {option.label}
+                            </button>
+                          </li>
+                        ))
                 ) : (
                   <li className={styles.listItem}>
                     <span className={styles.empty}>Нет данных</span>

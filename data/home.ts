@@ -14,7 +14,7 @@ export type SidebarPlaylist = {
 
 export const filterItems: FilterItem[] = [
   { name: "author", label: "исполнителю" },
-  { name: "year", label: "году выпуска" },
+  { name: "year", label: "дате выпуска" },
   { name: "genre", label: "жанру" },
 ];
 
