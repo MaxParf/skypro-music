@@ -1,0 +1,174 @@
+.item {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.track {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.trackButton {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trackActive .titleLink,
+.trackActive .authorLink,
+.trackActive .albumLink,
+.trackActive .timeText {
+  color: #b672ff;
+}
+
+.trackActive .titleImage {
+  box-shadow: inset 0 0 0 1px #b672ff;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 447px;
+}
+
+.titleImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 51px;
+  height: 51px;
+  margin-right: 17px;
+  padding: 16px;
+  background: #313131;
+}
+
+.titleSvg {
+  width: 18px;
+  height: 17px;
+  fill: transparent;
+  stroke: #4e4e4e;
+}
+
+.playingDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #b672ff;
+  animation: pulse 0.9s ease-in-out infinite alternate;
+}
+
+.titleText {
+  min-width: 0;
+}
+
+.titleLink {
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+}
+
+.titleSpan {
+  font-size: 16px;
+  line-height: 24px;
+  color: #4e4e4e;
+}
+
+.author {
+  display: flex;
+  justify-content: flex-start;
+  width: 321px;
+}
+
+.authorLink {
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: left;
+}
+
+.album {
+  width: 245px;
+}
+
+.albumLink {
+  color: #696969;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 60px;
+}
+
+.timeSvg {
+  width: 14px;
+  height: 12px;
+  fill: transparent;
+  stroke: #696969;
+}
+
+.timeText {
+  color: #696969;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: right;
+}
+
+.favoriteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 17px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.favoriteButton:hover .timeSvg {
+  stroke: #acacac;
+}
+
+.favoriteButtonActive .timeSvg {
+  fill: #b672ff;
+  stroke: #b672ff;
+}
+
+.favoriteButtonLoading {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.error {
+  margin-top: 8px;
+  color: #ff6a6a;
+  font-size: 13px;
+  line-height: 18px;
+  padding-left: 68px;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.72);
+    opacity: 0.55;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
