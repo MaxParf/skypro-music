@@ -17,9 +17,11 @@ import {
 import { withReauth } from "@/utils/withReauth";
 
 type FavoriteStatus = "idle" | "loading" | "succeeded" | "failed";
+type TracksStatus = "idle" | "loading" | "succeeded" | "failed";
 
 type TracksState = {
   tracks: Track[];
+  status: TracksStatus;
   isLoading: boolean;
   error: string | null;
   favoriteTracks: Track[];
@@ -30,6 +32,7 @@ type TracksState = {
 
 const initialState: TracksState = {
   tracks: [],
+  status: "idle",
   isLoading: false,
   error: null,
   favoriteTracks: [],
@@ -155,14 +158,17 @@ const tracksSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchTracks.pending, (state) => {
+        state.status = "loading";
         state.isLoading = true;
         state.error = null;
       })
       .addCase(fetchTracks.fulfilled, (state, action) => {
+        state.status = "succeeded";
         state.isLoading = false;
         state.tracks = action.payload;
       })
       .addCase(fetchTracks.rejected, (state, action) => {
+        state.status = "failed";
         state.isLoading = false;
         state.error = action.payload ?? "Не удалось загрузить треки.";
       })

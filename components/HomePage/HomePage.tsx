@@ -10,17 +10,19 @@ import { fetchTracks } from "@/store/tracksSlice";
 export function HomePage() {
   const dispatch = useAppDispatch();
   const { currentTrack, playlist } = useAppSelector((state) => state.player);
-  const { error, isLoading, tracks } = useAppSelector((state) => state.tracks);
+  const { error, isLoading, status, tracks } = useAppSelector(
+    (state) => state.tracks,
+  );
 
   const handleRetry = useCallback(() => {
     void dispatch(fetchTracks());
   }, [dispatch]);
 
   useEffect(() => {
-    if (!isLoading && tracks.length === 0 && !error) {
+    if (status === "idle") {
       void dispatch(fetchTracks());
     }
-  }, [dispatch, error, isLoading, tracks.length]);
+  }, [dispatch, status]);
 
   useEffect(() => {
     if (tracks.length === 0 || currentTrack !== null || playlist.length > 0) {
