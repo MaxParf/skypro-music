@@ -1,0 +1,46 @@
+"use client";
+
+import { useCallback, useEffect } from "react";
+import { Centerblock } from "@/components/Centerblock/Centerblock";
+import { MusicPageLayout } from "@/components/MusicPageLayout/MusicPageLayout";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setPlaylist } from "@/store/playerSlice";
+import { fetchTracks } from "@/store/tracksSlice";
+
+export function HomePage() {
+  const dispatch = useAppDispatch();
+  const { currentTrack, playlist } = useAppSelector((state) => state.player);
+  const { error, isLoading, status, tracks } = useAppSelector(
+    (state) => state.tracks,
+  );
+
+  const handleRetry = useCallback(() => {
+    void dispatch(fetchTracks());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (status === "idle") {
+      void dispatch(fetchTracks());
+    }
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    if (tracks.length === 0 || currentTrack !== null || playlist.length > 0) {
+      return;
+    }
+
+    dispatch(setPlaylist(tracks));
+  }, [currentTrack, dispatch, playlist.length, tracks]);
+
+  return (
+    <MusicPageLayout>
+      <Centerblock
+        title="Треки"
+        tracks={tracks}
+        isLoading={isLoading}
+        error={error}
+        onRetry={handleRetry}
+      />
+    </MusicPageLayout>
+  );
+}

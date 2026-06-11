@@ -1,0 +1,71 @@
+.nav {
+  width: 244px;
+  padding: 20px 0 20px 36px;
+  background-color: #181818;
+}
+
+.logo {
+  width: 113.33px;
+  height: 43px;
+  margin-bottom: 20px;
+  padding: 13px 0;
+  background-color: transparent;
+}
+
+.logoLink {
+  display: inline-flex;
+}
+
+.logoImage {
+  width: 113.33px;
+  height: 17px;
+  color: #181818;
+}
+
+.burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20px;
+  height: 36px;
+  padding: 13px 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.burgerLine {
+  display: inline-block;
+  width: 100%;
+  height: 1px;
+  background-color: #d3d3d3;
+}
+
+.menu {
+  display: none;
+  visibility: hidden;
+}
+
+.menuOpen {
+  display: block;
+  visibility: visible;
+}
+
+.menuList {
+  padding: 18px 0 10px;
+}
+
+.menuItem {
+  margin-bottom: 16px;
+  padding: 5px 0;
+}
+
+.menuLink {
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+}
+
+.menuButton {
+  cursor: pointer;
+}

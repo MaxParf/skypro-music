@@ -1,0 +1,12 @@
+.centerblock {
+  min-width: 0;
+  width: 100%;
+  padding: 20px 40px 20px 111px;
+}
+
+.title {
+  margin-bottom: 45px;
+  font-size: 64px;
+  line-height: 72px;
+  letter-spacing: -0.8px;
+}
